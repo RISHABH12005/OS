@@ -1,28 +1,48 @@
-#include <stdio.h>
-int main() {
-    int n, i, t = 0, done = 0;
-    int at[10], bt[10], ct[10], tat[10], wt[10], used[10] = {0};
-    float atat = 0, awt = 0;
-    scanf("%d", &n);
-    for(i = 0; i < n; i++)
-        scanf("%d%d", &at[i], &bt[i]);
-    while(done < n) {
-        int min = 9999, p = -1;
-        for(i = 0; i < n; i++)
-            if(!used[i] && at[i] <= t && bt[i] < min)
-                min = bt[i], p = i;
-        if(p == -1) { t++; continue; }
-        t += bt[p];
-        ct[p] = t;
-        tat[p] = ct[p] - at[p];
-        wt[p] = tat[p] - bt[p];
-        atat += tat[p];
-        awt += wt[p];
-        used[p] = 1;
-        done++;
-    }
-    for(i = 0; i < n; i++)
-        printf("%d %d %d %d %d\n", at[i], bt[i], ct[i], tat[i], wt[i]);
-    printf("Avg TAT=%.2f\nAvg WT=%.2f", atat/n, awt/n);
-    return 0;
+#include<stdio.h>
+int main()
+{
+int n,i,j;
+int at[20],bt[20],ct[20],tat[20],wt[20],p[20];
+float avgtat=0,avgwt=0;
+printf("Enter number of processes: ");
+scanf("%d",&n);
+for(i=0;i<n;i++)
+{
+p[i]=i+1;
+printf("AT BT: ");
+scanf("%d%d",&at[i],&bt[i]);
+}
+for(i=0;i<n;i++)
+{
+for(j=i+1;j<n;j++)
+{
+if(bt[i]>bt[j])
+{
+int temp;
+temp=bt[i]; bt[i]=bt[j]; bt[j]=temp;
+temp=at[i]; at[i]=at[j]; at[j]=temp;
+temp=p[i]; p[i]=p[j]; p[j]=temp;
+}
+}
+}
+ct[0]=bt[0];
+for(i=1;i<n;i++)
+ct[i]=ct[i-1]+bt[i];
+for(i=0;i<n;i++)
+{
+tat[i]=ct[i]-at[i];
+wt[i]=tat[i]-bt[i];
+avgwt+=wt[i];
+avgtat+=tat[i];
+}
+printf("\nPID AT BT CT TAT WT\n");
+for(i=0;i<n;i++)
+printf("P%d %d %d %d %d %d\n",p[i],at[i],bt[i],ct[i],tat[i],wt[i]);
+printf("\nAverage WT=%.2f",avgwt/n);
+printf("\nAverage TAT=%.2f",avgtat/n);
+printf("\nGantt Chart:\n");
+for(i=0;i<n;i++)
+printf("|P%d",p[i]);
+printf("|\n");
+return 0;
 }
